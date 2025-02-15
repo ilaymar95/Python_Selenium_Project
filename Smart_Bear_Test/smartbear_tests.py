@@ -464,7 +464,7 @@ class SmartBearTest(TestCase):
             self.product_page.change_quantity(quantity)
 
             # Simulate clicking outside the input area to update the price - Product name
-            self.driver.find_element(By.CSS_SELECTOR, 'h1.pd-name').click()
+            self.product_page.get_product_name().click()
             self.product_page.add_to_cart()
 
             if mouse_click:
