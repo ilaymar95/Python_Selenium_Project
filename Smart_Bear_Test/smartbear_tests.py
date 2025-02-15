@@ -44,40 +44,42 @@ class SmartBearTest(TestCase):
 
     def test_page_transitions(self):
         """Test transition between pages"""
+        # Choose a random category and click it
+        category_name = choice(self.main_page.categories()).text
+        self.main_page.click_category(category_name)
 
-        def test_page_transitions(self):
-            """Test transition between pages"""
-            # Choose a random category and click it
-            category_name = choice(self.main_page.categories()).text
-            self.main_page.click_category(category_name)
+        # Assert that the clicked category name matches the category name displayed on the category page
+        self.assertEqual(category_name, self.category_page.get_category_name().text)
 
-            # Assert that the clicked category name matches the category name displayed on the category page
+        # Scroll down slightly on the category page
+        self.driver.execute_script("window.scrollBy(0, 350)")
+
+        # Choose a random product from the category and click it
+        product = choice(self.category_page.product()).text
+        self.category_page.click_product(product)
+
+        # Assert that the clicked product name matches the product name displayed on the product page
+        self.assertEqual(self.product_page.get_product_name().text, product)
+
+        # Check if there are more than one inactive breadcrumbs on the product page
+        if len(self.product_page.inactive_breadcrumbs()) > 1:
+            # Click the last inactive breadcrumb to navigate back to the category page
+            self.product_page.inactive_breadcrumbs()[-1].click()
+            # Assert that the category name on the category page matches the initially clicked category name
+            self.assertEqual(category_name, self.category_page.get_category_name().text)
+        else:
+            # If there is only one inactive breadcrumb, go back to the previous page using the browser's back button
+            self.driver.back()
+            # Assert that the category name on the category page matches the initially clicked category name
             self.assertEqual(category_name, self.category_page.get_category_name().text)
 
-            # Scroll down slightly on the category page
-            self.driver.execute_script("window.scrollBy(0, 350)")
+        # Click on the toolbar logo to navigate back to the homepage
+        self.toolbar.toolbar_logo_click()
 
-            # Choose a random product from the category and click it
-            product = choice(self.category_page.product()).text
-            self.category_page.click_product(product)
 
-            # Assert that the clicked product name matches the product name displayed on the product page
-            self.assertEqual(self.product_page.get_product_name().text, product)
+        # Log the successful completion of the test
+        logging.info("Test test_page_transitions completed successfully.")
 
-            # Check if there are more than one inactive breadcrumbs on the product page
-            if len(self.product_page.inactive_breadcrumbs()) > 1:
-                # Click the last inactive breadcrumb to navigate back to the category page
-                self.product_page.inactive_breadcrumbs()[-1].click()
-                # Assert that the category name on the category page matches the initially clicked category name
-                self.assertEqual(category_name, self.category_page.get_category_name().text)
-            else:
-                # If there is only one inactive breadcrumb, go back to the previous page using the browser's back button
-                self.driver.back()
-                # Assert that the category name on the category page matches the initially clicked category name
-                self.assertEqual(category_name, self.category_page.get_category_name().text)
-
-            # Click on the toolbar logo to navigate back to the homepage
-            self.toolbar.toolbar_logo_click()
 
     def test_add_to_cart(self):
         """
@@ -111,6 +113,8 @@ class SmartBearTest(TestCase):
 
         # Empty the cart at the end of the test
         self.clean_cart()
+        # Log the successful completion of the test
+        logging.info("Test test_add_to_cart completed successfully.")
 
     def test_add_to_cart_3(self):
         """
@@ -121,12 +125,13 @@ class SmartBearTest(TestCase):
         expected_product_names = []
         expected_prices = []
         selected_products = set()  # Track selected products to avoid duplicates
-
+        # sleep(50)
         # Add two unique products to the cart
         for _ in range(2):
             quantity = randint(2, 10)
             expected_quantities.append(quantity)
-            self.add_random_product_to_cart(quantity, True, selected_products)  # Ensure unique selection
+            self.add_random_product_to_cart(quantity, True, selected_products) # Ensure unique selection
+            self.remove_cart_blocker()
             expected_product_names.append(self.product_page.get_product_name().text)
             expected_prices.append(self.product_page.get_product_price().text)
             self.toolbar.toolbar_logo_click()
@@ -151,6 +156,9 @@ class SmartBearTest(TestCase):
             self.assertEqual(str(expected_quantities[i]), actual_quantities[3 - i - 1].get_attribute('value'))
 
         self.clean_cart()
+        # Log the successful completion of the test
+        logging.info("Test test_add_to_cart_3 completed successfully.")
+
     def test_add_to_cart_and_remove(self):
         """
         Adds multiple products to the shopping cart, removes the first item added, and verifies that only the second item remains.
@@ -184,6 +192,8 @@ class SmartBearTest(TestCase):
         self.assertEqual(remaining_quantities[0], str(expected_quantities[1]),
                          "Wrong quantity for the remaining product")
         self.clean_cart()
+        # Log the successful completion of the test
+        logging.info("Test test_add_to_cart_and_remove completed successfully.")
 
     def test_cart_transitions(self):
         selected_products=set()
@@ -211,6 +221,8 @@ class SmartBearTest(TestCase):
         self.assertIsNotNone(self.cart_page.find_shopping_cart(),
                              "Shopping cart page should be displayed after clicking 'Go to cart'.")
         self.cart_page.empty_cart()
+        # Log the successful completion of the test
+        logging.info("Test test_cart_transitions completed successfully.")
 
     def test_3_products_details(self):
         """
@@ -300,6 +312,8 @@ class SmartBearTest(TestCase):
 
         # Empty the cart at the end of the test
         self.cart_page.empty_cart()
+        # Log the successful completion of the test
+        logging.info("Test test_3_products_details completed successfully.")
 
     def test_changes_in_2_products(self):
         """
@@ -355,6 +369,8 @@ class SmartBearTest(TestCase):
         self.assertEqual(total_cost, sum_cart_total,
                          f"Expected total cost: {total_cost}, but got: {sum_cart_total}")
         self.cart_page.empty_cart()
+        # Log the successful completion of the test
+        logging.info("Test test_changes_in_2_products completed successfully.")
 
     def test_complete_order(self):
         username = "IlayMarcianoTest"
@@ -380,6 +396,8 @@ class SmartBearTest(TestCase):
         self.assertEqual(order_number,self.checkout.get_completed_order_number())
         self.toolbar.toolbar_cart_click()
         self.assertEqual(self.cart_popup.cart_total_items_amount(),'0')
+        # Log the successful completion of the test
+        logging.info("Test test_complete_order completed successfully.")
 
     def test_login_logout(self):
         """
@@ -404,7 +422,8 @@ class SmartBearTest(TestCase):
         self.toolbar.toolbar_logout()
         # Verify that the account name changes back to "Log in" after logging out
         self.assertEqual(self.toolbar.toolbar_account_name().text.lower(), "Log in".lower())
-
+        # Log the successful completion of the test
+        logging.info("Test test_login_logout completed successfully.")
 
     # Helper functions
     def add_random_product_to_cart(self, quantity, mouse_click=False, selected_products=None):
@@ -443,6 +462,9 @@ class SmartBearTest(TestCase):
                 self.product_page.choose_color()
 
             self.product_page.change_quantity(quantity)
+
+            # Simulate clicking outside the input area to update the price - Product name
+            self.driver.find_element(By.CSS_SELECTOR, 'h1.pd-name').click()
             self.product_page.add_to_cart()
 
             if mouse_click:
