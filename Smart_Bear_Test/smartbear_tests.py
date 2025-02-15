@@ -44,20 +44,40 @@ class SmartBearTest(TestCase):
 
     def test_page_transitions(self):
         """Test transition between pages"""
-        category_name = choice(self.main_page.categories()).text
-        self.main_page.click_category(category_name)
-        self.assertEqual(category_name,self.category_page.get_category_name().text)
-        self.driver.execute_script("window.scrollBy(0, 350)")
-        product = choice(self.category_page.product()).text
-        self.category_page.click_product(product)
-        self.assertEqual(self.product_page.get_product_name().text,product)
-        if len(self.product_page.inactive_breadcrumbs())>1:
-            self.product_page.inactive_breadcrumbs()[-1].click()
+
+        def test_page_transitions(self):
+            """Test transition between pages"""
+            # Choose a random category and click it
+            category_name = choice(self.main_page.categories()).text
+            self.main_page.click_category(category_name)
+
+            # Assert that the clicked category name matches the category name displayed on the category page
             self.assertEqual(category_name, self.category_page.get_category_name().text)
-        else:
-            self.driver.back()
-            self.assertEqual(category_name, self.category_page.get_category_name().text)
-        self.toolbar.toolbar_logo_click()
+
+            # Scroll down slightly on the category page
+            self.driver.execute_script("window.scrollBy(0, 350)")
+
+            # Choose a random product from the category and click it
+            product = choice(self.category_page.product()).text
+            self.category_page.click_product(product)
+
+            # Assert that the clicked product name matches the product name displayed on the product page
+            self.assertEqual(self.product_page.get_product_name().text, product)
+
+            # Check if there are more than one inactive breadcrumbs on the product page
+            if len(self.product_page.inactive_breadcrumbs()) > 1:
+                # Click the last inactive breadcrumb to navigate back to the category page
+                self.product_page.inactive_breadcrumbs()[-1].click()
+                # Assert that the category name on the category page matches the initially clicked category name
+                self.assertEqual(category_name, self.category_page.get_category_name().text)
+            else:
+                # If there is only one inactive breadcrumb, go back to the previous page using the browser's back button
+                self.driver.back()
+                # Assert that the category name on the category page matches the initially clicked category name
+                self.assertEqual(category_name, self.category_page.get_category_name().text)
+
+            # Click on the toolbar logo to navigate back to the homepage
+            self.toolbar.toolbar_logo_click()
 
     def test_add_to_cart(self):
         """
@@ -385,6 +405,8 @@ class SmartBearTest(TestCase):
         # Verify that the account name changes back to "Log in" after logging out
         self.assertEqual(self.toolbar.toolbar_account_name().text.lower(), "Log in".lower())
 
+
+    # Helper functions
     def add_random_product_to_cart(self, quantity, mouse_click=False, selected_products=None):
         """
         Adds a random product from a random category to the shopping cart
