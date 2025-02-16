@@ -19,6 +19,7 @@ class BearStoreMainPage:
                 break
 
     def featured_products(self):
+        """Returns a list of the featured products in the BearStoreMainPage."""
         featured_prods = self.driver.find_element(By.CSS_SELECTOR,'#artlist-7040135593')
         return featured_prods.find_elements(By.CSS_SELECTOR,'article > h3')
 

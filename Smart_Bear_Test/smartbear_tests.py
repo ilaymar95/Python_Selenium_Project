@@ -6,17 +6,17 @@ import logging
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
-from Smart_Bear_Classes.smartbear_product_page import ProductPage
-from Smart_Bear_Classes.smartbear_cart_popup import CartPopUp
-from Smart_Bear_Classes.smartbear_category_page import CategoryPage
-from Smart_Bear_Classes.smartbear_main_page import BearStoreMainPage
-from Smart_Bear_Classes.smartbear_toolbar import BearStoreToolBar
-from Smart_Bear_Classes.smartbear_cart_page import BearStoreCartPage
-from Smart_Bear_Classes.smartbear_login import BearStoreLoginPage
-from Smart_Bear_Classes.smartbear_checkout import BearStoreCheckout
+from pythonProject.Smart_Bear_Classes.smartbear_product_page import ProductPage
+from pythonProject.Smart_Bear_Classes.smartbear_cart_popup import CartPopUp
+from pythonProject.Smart_Bear_Classes.smartbear_category_page import CategoryPage
+from pythonProject.Smart_Bear_Classes.smartbear_main_page import BearStoreMainPage
+from pythonProject.Smart_Bear_Classes.smartbear_toolbar import BearStoreToolBar
+from pythonProject.Smart_Bear_Classes.smartbear_cart_page import BearStoreCartPage
+from pythonProject.Smart_Bear_Classes.smartbear_login import BearStoreLoginPage
+from pythonProject.Smart_Bear_Classes.smartbear_checkout import BearStoreCheckout
 import re
+
 
 # Logging configuring
 logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(message)s")
@@ -93,7 +93,7 @@ class SmartBearTest(TestCase):
         # Add first product
         quantity = randint(2, 5)
         sum_quantity += quantity
-        self.add_random_product_to_cart(quantity)
+        self.add_random_product_to_cart(quantity,True,selected_products)
 
         # Return to homepage
         self.toolbar.toolbar_logo_click()
@@ -101,7 +101,7 @@ class SmartBearTest(TestCase):
         # Add second product with a new random quantity
         quantity = randint(2, 5)  # Ensure random quantity instead of incrementing
         sum_quantity += quantity
-        self.add_random_product_to_cart(quantity)
+        self.add_random_product_to_cart(quantity, False, selected_products)
 
         # Ensure UI has updated before checking cart quantity
         WebDriverWait(self.driver, 5).until(

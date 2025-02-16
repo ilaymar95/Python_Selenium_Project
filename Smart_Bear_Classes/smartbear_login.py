@@ -9,21 +9,26 @@ class BearStoreLoginPage:
         self.driver = driver
 
     def login_input(self):
-        login = self.driver.find_element(By.ID,"UsernameOrEmail")
+        """Locate and return the login input field."""
+        login = self.driver.find_element(By.ID, "UsernameOrEmail")
         return login
 
     def login_input_sendkeys(self,username):
+        """Clear the login input field and enter the username."""
         self.login_input().clear()
         self.login_input().send_keys(username)
 
     def password_input(self):
-        password = self.driver.find_element(By.ID,"Password")
+        """Locate and return the password input field."""
+        password = self.driver.find_element(By.ID, "Password")
         return password
 
     def password_input_sendkeys(self,password):
+        """Clear the password input field and enter the password."""
         self.password_input().clear()
         self.password_input().send_keys(password)
 
     def log_in_button(self):
+        """Click the login button to submit the login form."""
         log_in = self.driver.find_element(By.CSS_SELECTOR, "div > button.btn-login")
-        self.driver.execute_script("arguments[0].click();",log_in)
+        self.driver.execute_script("arguments[0].click();", log_in)
