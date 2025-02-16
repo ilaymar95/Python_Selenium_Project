@@ -4,20 +4,17 @@ from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
+"""The class is for Shopping Cart page, including the functions to empty and change details"""
 class BearStoreCartPage:
     def __init__(self,driver:webdriver.Edge):
-        """Initialize the BearStoreToolBar with a WebDriver instance."""
         self.driver = driver
 
     def find_shopping_cart(self):
-        """Locate the shopping cart element on the page."""
         cart = WebDriverWait(self.driver, 5).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, '#content-center > div.page.shopping-cart-page')))
         return cart
 
     def empty_cart(self):
-        """Remove all items from the shopping cart."""
         while True:
             try:
                 # Re-locate the remove buttons inside the loop to avoid stale element exception
@@ -25,10 +22,8 @@ class BearStoreCartPage:
                     EC.presence_of_all_elements_located((By.CSS_SELECTOR,
                                                          'div.cart-row-actions.btn-group-vertical > a.btn-to-danger.btn-sm.btn-icon.ajax-action-link'))
                 )
-                # If no remove buttons are found, break the loop
                 if not remove_btns:
                     break
-                # Click the last remove button
                 remove_btns[-1].click()
                 # Wait for a short period to ensure the element is removed from the DOM
                 WebDriverWait(self.driver, 1).until(EC.staleness_of(remove_btns[-1]))
@@ -58,8 +53,11 @@ class BearStoreCartPage:
         prod_quantities = WebDriverWait(self.driver,5).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR,'div.input-group.bootstrap-touchspin > input')))
         return prod_quantities
 
-    def change_quantity(self,element,quantity):
+
+    def change_quantity(self, index, quantity):
         """Change the quantity of a product in the shopping cart."""
+        quantities = self.find_products_quantities()
+        element = quantities[index]
         element.clear()
         element.send_keys(quantity)
 

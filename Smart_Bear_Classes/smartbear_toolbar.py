@@ -2,7 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-
+# Add a main note for this class instead of every function
 class BearStoreToolBar:
     def __init__(self,driver:webdriver.Edge):
         """Initialize the BearStoreToolBar with a WebDriver instance."""

@@ -3,32 +3,27 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
+"""A class for the websites Login page"""
 class BearStoreLoginPage:
     def __init__(self,driver:webdriver.Edge):
-        """Initialize the BearStoreToolBar with a WebDriver instance."""
         self.driver = driver
 
     def login_input(self):
-        """Locate and return the login input field."""
         login = self.driver.find_element(By.ID, "UsernameOrEmail")
         return login
 
     def login_input_sendkeys(self,username):
-        """Clear the login input field and enter the username."""
         self.login_input().clear()
         self.login_input().send_keys(username)
 
     def password_input(self):
-        """Locate and return the password input field."""
         password = self.driver.find_element(By.ID, "Password")
         return password
 
     def password_input_sendkeys(self,password):
-        """Clear the password input field and enter the password."""
         self.password_input().clear()
         self.password_input().send_keys(password)
 
     def log_in_button(self):
-        """Click the login button to submit the login form."""
         log_in = self.driver.find_element(By.CSS_SELECTOR, "div > button.btn-login")
         self.driver.execute_script("arguments[0].click();", log_in)
