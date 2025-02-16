@@ -50,9 +50,6 @@ class SmartBearTest(TestCase):
         self.cart_page = BearStoreCartPage(self.driver)
         self.checkout = BearStoreCheckout(self.driver)
         self.login_page = BearStoreLoginPage(self.driver)
-        self.toolbar.toolbar_cart_click()
-        self.clean_cart()
-        self.remove_cart_blocker()
 
     def test_page_transitions(self):
         """Test transition between pages and check that the titles are correct"""
